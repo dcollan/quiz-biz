@@ -1,0 +1,44 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+}
+
+
+main {
+    flex: 1 0 auto;
+}
+
+
+footer {
+    flex-shrink: 0;
+    font-size: .5rem;
+}
+
+/* hide sections until they are shown via the click events */
+#problems {
+    display: none;  
+  } 
+
+/* Remove bullet points from answers list */
+ul.nobullets {
+list-style-type: none;
+}
+
+
+.selected,
+.selected:hover,
+.selected:active,
+.selected:focus,
+.selected:active:focus {
+    box-shadow: none;
+    outline: none;
+    background-color: #28a745;
+}
