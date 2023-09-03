@@ -3,7 +3,7 @@ let remainingSeconds = 75;
 const infoScreen = document.querySelector("#info");
 const problemScreen = document.querySelector("#problems");
 let showProblem = document.querySelector("#problem");
-let problemsCompleted = 0;
+let i = 0;
 
 const beginQuiz = document.querySelector("#begin");
 const optionSelected = document.querySelectorAll("button.selected")
@@ -11,6 +11,8 @@ const firstChoice = document.querySelector("#choice1");
 const secondChoice = document.querySelector("#choice2");
 const thirdChoice = document.querySelector("#choice3");
 const fourthChoice = document.querySelector("#choice4");
+
+const correct = document.querySelector("#right-wrong");
 
 
 //Initialize Problems
@@ -21,14 +23,17 @@ const problems = [
         "1. Inheritance", 
         "2. Abstraction", 
         "3. Polymorphism", 
-        "4. Encapsulation"
-        ],
-        solution: "1"
+        "4. Encapsulation"],
+        solution: "0"
     },
     {
         problem: "Which of following belongs to the four pillars of computional thinking?",
-        choices: ["Inheritance", "Abstraction", "3. Polymorphism", "4. Encapsulation"],
-        solution: "2"
+        choices: [
+        "1. Inheritance",
+        "2. Abstraction",
+        "3. Polymorphism",
+        "4. Encapsulation"],
+        solution: "1"
     },
     {
         problem: "In web development, which of the following is used to call HTML ID elements from a JavaScript class?",
@@ -36,9 +41,8 @@ const problems = [
         "1. .", 
         "2. --", 
         "3. $", 
-        "4. #"
-        ],
-        solution: "4"
+        "4. #"],
+        solution: "3"
     },
     {
         problem: "Why is it an important practice to use 'let' or 'const' locally in web development?",
@@ -46,9 +50,8 @@ const problems = [
         "1. It allows for developers to identify bugs easier and more quickly in the code", 
         "2. It can help maintain storage capacity, preventing from too much space being consumed", 
         "3. It prevents the risk of other developers accidently modifying crucial code using the same variable once it's declared", 
-        "4. It is not. 'Var' can also be another excellent practice when declaring variables. They are all the same"
-        ],
-        solution: "3"
+        "4. It is not. 'Var' can also be another excellent practice when declaring variables. They are all the same"],
+        solution: "2"
     },
     {
         // question 4
@@ -57,9 +60,8 @@ const problems = [
         "1. align-items: flex-start",
         "2. justify-content: flex-start", 
         "3. align-items: flex-end", 
-        "4. justify-content: flex-end"
-        ],
-        solution: "4"
+        "4. justify-content: flex-end"],
+        solution: "3"
     }
 ];
 
@@ -71,7 +73,7 @@ function initializeTimer() {
         remainingSeconds--;
         timer.textContent = "Seconds Left: " + remainingSeconds;
 
-        if (remainingSeconds === 0 || problemsCompleted === problems.length) {
+        if (remainingSeconds === 0 || i === problems.length) {
             clearInterval(timerInterval);
             showProblem.style.display = "none";
         }
@@ -79,13 +81,13 @@ function initializeTimer() {
 }
 
 //Setup navigation for user to course through problems upon selecting option
-function initializeProblem(index) {
-    if (index < problems.length) {
-        showProblem.textContent = problems[index].problem;
-        firstChoice.textContent = problems[index].choices[0];
-        secondChoice.textContent = problems[index].choices[1];
-        thirdChoice.textContent = problems[index].choices[2];
-        fourthChoice.textContent = problems[index].choices[3];
+function initializeProblem(pos) {
+    if (pos < problems.length) {
+        showProblem.textContent = problems[pos].problem;
+        firstChoice.textContent = problems[pos].choices[0];
+        secondChoice.textContent = problems[pos].choices[1];
+        thirdChoice.textContent = problems[pos].choices[2];
+        fourthChoice.textContent = problems[pos].choices[3];
     }
   }
 
@@ -93,11 +95,50 @@ function initializeProblem(index) {
 function runQuiz() {
     infoScreen.style.display = "none";
     problemScreen.style.display = "block";
-    problemsCompleted = 0;
+    i = 0;
 
     initializeTimer();
-    initializeProblem(problemsCompleted);
+    initializeProblem(i);
 }
 
 //Initiate timer when user clicks 'begin'
 beginQuiz.addEventListener("click", runQuiz);
+
+
+
+// Setup ability for checking to see if the user has selected a right or wrong answer
+function checkAnswer(event) {
+    event.preventDefault();
+
+    // Setup message notification for right/wrong answer to be displayed as h1 element
+    correct.style.display = "block";
+    let message = document.createElement("h1");
+    correct.appendChild(message);
+
+    // Check index in 'problems' array, and determine if it is correct from what user has selected using appended h1 element
+    if (problems[i].solution === event.target.value) {
+        message.textContent = "Correct!";
+    } else if (problems[i].solution !== event.target.value) {
+    // Deduct 20 seconds if user selects an incorrect answer
+        remainingSeconds = remainingSeconds - 20;
+        message.textContent = "Wrong!";
+    }
+
+    // Keep 'Right' or 'Wrong' message notification showing until reverted to 'none' in 2 seconds
+    setTimeout(function () {
+        message.style.display = 'none';
+    }, 2000);
+
+    // Be able to loop through all indexes, and call the function as long as the final question has not yet been completed
+    if (i < problems.length) {
+        i++;
+        initializeProblem(i);
+    }
+}
+
+// Enable so that once user clicks on an answer, it will respond, and go to the next question.
+// Learned how to perform function for all elements in an array from W3 Schools source:
+// https://www.w3schools.com/jsref/jsref_foreach.asp
+optionSelected.forEach(function(clickedAnswer) {
+    clickedAnswer.addEventListener('click', checkAnswer);
+});

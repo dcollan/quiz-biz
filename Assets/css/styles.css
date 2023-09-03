@@ -11,27 +11,24 @@ body {
     flex-direction: column;
 }
 
-
 main {
     flex: 1 0 auto;
 }
-
 
 footer {
     flex-shrink: 0;
     font-size: .5rem;
 }
 
-/* hide sections until they are shown via the click events */
-#problems {
+#problems,
+#right-wrong {
     display: none;  
   } 
 
-/* Remove bullet points from answers list */
-ul.nobullets {
+/* Do not include bullet points per choice in each question */
+ul.exclude-bullet-text {
 list-style-type: none;
 }
-
 
 .selected,
 .selected:hover,
