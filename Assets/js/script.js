@@ -14,6 +14,10 @@ const fourthChoice = document.querySelector("#choice4");
 
 const correct = document.querySelector("#right-wrong");
 
+let scoreList = [];
+const showResults = document.querySelector("#results");
+let totalScore = document.querySelector("#total");
+
 
 //Initialize Problems
 const problems = [
@@ -75,7 +79,9 @@ function initializeTimer() {
 
         if (remainingSeconds === 0 || i === problems.length) {
             clearInterval(timerInterval);
-            showProblem.style.display = "none";
+            problemScreen.style.display = "none";
+            showResults.style.display = "block";
+            totalScore.textContent = remainingSeconds;
         }
     }, 1000);
 }

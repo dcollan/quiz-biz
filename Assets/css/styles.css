@@ -21,7 +21,8 @@ footer {
 }
 
 #problems,
-#right-wrong {
+#right-wrong,
+#results {
     display: none;  
   } 
 
