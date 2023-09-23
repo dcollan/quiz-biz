@@ -30,6 +30,10 @@ From scratch, create a quiz game at which a timer will initiate as soon as the u
 
 ![img](./Assets/Quiz-Screenshot.png)
 
+## Link to Website
+
+https://dcollan.github.io/quiz-biz/
+
 ## How to Run
 
 1. Run 'git clone (repo link)' on Git Bash'
