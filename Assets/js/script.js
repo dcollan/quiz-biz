@@ -14,9 +14,16 @@ const fourthChoice = document.querySelector("#choice4");
 
 const correct = document.querySelector("#right-wrong");
 
-let scoreList = [];
+let scoreResults = [];
 const showResults = document.querySelector("#results");
 let totalScore = document.querySelector("#total");
+
+const viewHighScores = document.querySelector("#highscores");
+let allScores = document.querySelector("#savedscores");
+let enterInitials = document.querySelector("#savedinitials");
+const placeScore = document.querySelector("#enterScore");
+const returnHome = document.querySelector("#return");
+const observeScores = document.querySelector("#seeScores");
 
 
 //Initialize Problems
@@ -147,4 +154,70 @@ function checkAnswer(event) {
 // https://www.w3schools.com/jsref/jsref_foreach.asp
 optionSelected.forEach(function(clickedAnswer) {
     clickedAnswer.addEventListener('click', checkAnswer);
+});
+
+function enterScores() {
+    localStorage.setItem("scoreResults", JSON.stringify(scoreResults));
+}
+
+function showScores() {
+    // Retrieve all of the entered scores from local storage
+    let enteredScoreResults = JSON.parse(localStorage.getItem("scoreResults"));
+
+    // Have scoreResults array updated once scores are retrieved from local storage
+    if (enteredScoreResults !== null) {
+        scoreResults = enteredScoreResults;
+    }
+}
+
+
+function enableScore(event) {
+    event.preventDefault();
+
+    showResults.style.display = "none";
+    viewHighScores.style.display = "block";
+
+    let userInitials = enterInitials.value.toUpperCase();
+    scoreResults.push({ inputInitials: userInitials, useScore: remainingSeconds });
+
+    scoreResults = scoreResults.sort((a, b) => {
+        if (a.useScore < b.useScore) {
+          return 1;
+        } else {
+          return -1;
+        }
+      });
+    
+    allScores.innerHTML="";
+    for (let i = 0; i < scoreResults.length; i++) {
+        let newList = document.createElement("li");
+        newList.textContent = `${scoreResults[i].inputInitials}: ${scoreResults[i].useScore}`;
+        allScores.append(newList);
+    }
+
+    // Add to local storage
+    enterScores();
+    showScores();
+}
+
+// Place new score
+placeScore.addEventListener("click", enableScore);
+
+// Return button to go back to the main screen
+returnHome.addEventListener("click", function () {
+    viewHighScores.style.display = "none";
+    infoScreen.style.display = "block";
+    remainingSeconds = 75;
+    timer.textContent = `Time:${remainingSeconds}s`;
+});
+
+// See or hide the high scores Button
+observeScores.addEventListener("click", function () {
+    if (viewHighScores.style.display === "none") {
+        viewHighScores.style.display = "block";
+    } else if (viewHighScores.style.display === "block") {
+        viewHighScores.style.display = "none";
+    } else {
+        return alert("Sorry, there are currently not any scores to display.");
+    }
 });
